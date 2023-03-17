@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminLogin from "../screens/auth/AdminLogin";
 import Products from "../screens/dashboard/Products";
 import Categories from "../screens/dashboard/Categories";
+import Customers from "../screens/dashboard/Customers";
 import Private from "./Private";
 import Public from "./Public";
 import CreateCategory from "../screens/dashboard/CreateCategory";
@@ -64,6 +65,9 @@ const Routing = () => {
                 <Route path="orders" element={<Orders />} />
                 <Route path="orders/:page" element={<Orders />} />
                 <Route path="order-details/:id" element={<OrderDetails />} />
+
+                <Route path="customers" element={<Private><Customers /></Private>} />
+                <Route path="customers/:page" element={<Private><Customers /></Private>} />
 
             </Route>
         </Routes>
