@@ -28,7 +28,7 @@ const Store = configureStore({
         "authReducer": authReducer,
         "globalReducer": globalReducer
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([categoryService.middleware, authService.middleware, productService.middleware, homeProducts.middleware, paymentService.middleware, orderService.middleware, userOrdersService.middleware]) 
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([categoryService.middleware, authService.middleware, productService.middleware, homeProducts.middleware, paymentService.middleware, orderService.middleware, userOrdersService.middleware, userService.middleware]) 
 });
 
 export default Store;
