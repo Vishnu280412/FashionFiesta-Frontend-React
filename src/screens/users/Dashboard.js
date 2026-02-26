@@ -16,13 +16,15 @@ const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     useEffect(() => {
-        if(isSuccess) {
+        if(isSuccess && data?.status === 'paid') {
             dispatch(removeAllItems());
             localStorage.removeItem('cart');
             toast.success(data.msg);
             navigate('/user');
+        } else if(isSuccess && data?.status !== 'paid') {
+            toast.error(data?.msg || 'Payment is not completed.');
         }
-    }, [isSuccess])
+    }, [isSuccess, data?.status, data?.msg, dispatch, navigate])
     return (
         <>
             <Nav />

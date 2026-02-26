@@ -17,8 +17,14 @@ const PDetailsCard = ({ product }) => {
     const [sizeState, setSizeState] = useState(product?.sizes?.length > 0 && product.sizes[0].name);
     const [colorState, setColorState] = useState(product?.colors?.length > 0 && product.colors[0].color);
     const [quantity, setQuantity] = useState(1);
+    const parsedStock = parseInt(product.stock, 10);
+    const availableStock = Number.isInteger(parsedStock) && parsedStock >= 0 ? parsedStock : 0;
     const inc = () => {
-        setQuantity(quantity + 1);
+        if(quantity < availableStock) {
+            setQuantity(quantity + 1);
+        } else {
+            toast.error(`Only ${availableStock} item(s) available in stock.`);
+        }
     }
     const dec = () => {
         if (quantity > 1) {
@@ -31,6 +37,15 @@ const PDetailsCard = ({ product }) => {
     const dispatch = useDispatch();
 
     const addToCart = () => {
+        if(availableStock < 1) {
+            toast.error(`${product.title} is out of stock`);
+            return;
+        }
+        if(quantity > availableStock) {
+            toast.error(`Only ${availableStock} item(s) available in stock.`);
+            return;
+        }
+
         const {['colors']: colors, ['sizes']: sizes, ['createdAt']: createdAt, ['updatedAt']: updatedAt, ...newProduct} = product;
         newProduct['size'] = sizeState;
         newProduct['color'] = colorState;
@@ -85,6 +100,15 @@ const PDetailsCard = ({ product }) => {
                 <span className="text-xl font-bold text-gray-900">{currency.format(discountedPrice, {code: "INR"})}</span>
                 <span className="text-lg line-through text-gray-500">{currency.format(product.price, {code: "INR"})}</span>
             </div>
+            <div className="mb-4">
+                {availableStock > 0 ? (
+                    <span className="text-sm font-medium text-emerald-600">
+                        {availableStock > 20 ? 'In stock' : `Only ${availableStock} item(s) left`}
+                    </span>
+                ) : (
+                    <span className="text-sm font-medium text-rose-600">Out of stock</span>
+                )}
+            </div>
             {product.sizes.length > 0 && <>
                 <h3 className="text-base font-medium capitalize text-gray-600 mb-1">sizes</h3>
                 <div className="flex flex-wrap -mx-2">
@@ -111,10 +135,22 @@ const PDetailsCard = ({ product }) => {
             </>)}
             <div className="flex -mx-3 items-center">
                 <div className="w-full sm:w-6/12 p-3">
-                    <Quantity quantity={quantity} inc={inc} dec={dec} />
+                    <Quantity
+                        quantity={quantity}
+                        inc={inc}
+                        dec={dec}
+                        disableInc={availableStock < 1 || quantity >= availableStock}
+                        disableDec={quantity <= 1}
+                    />
                 </div>
                 <div className="w-full sm:w-6/12 p-3">
-                    <button className="btn btn-indigo" onClick={addToCart}>add to cart</button>
+                    <button
+                        className="btn btn-indigo"
+                        disabled={availableStock < 1}
+                        onClick={addToCart}
+                    >
+                        add to cart
+                    </button>
                 </div>
             </div>
             <div className="flex -mx-3 items-center">
