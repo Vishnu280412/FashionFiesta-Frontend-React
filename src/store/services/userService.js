@@ -4,7 +4,7 @@ const userService = createApi({
     reducerPath: 'users',
     tagTypes: 'users',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://long-pear-python-belt.cyclic.app/api/',
+        baseUrl: 'https://fashion-fiesta-backend-peach.vercel.app/api/',
         prepareHeaders: (headers, { getState }) => {
             const reducers = getState();
             const token = reducers?.authReducer?.adminToken;
